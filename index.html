@@ -29,12 +29,14 @@ img{display:block;max-width:100%}a{color:inherit;text-decoration:none}
 section{padding:100px 0;position:relative}
 @keyframes dialSpin{0%{transform:rotate(0deg)}100%{transform:rotate(360deg)}}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
+@keyframes unlockBounce{0%{transform:scale(1)}30%{transform:scale(1.15)}60%{transform:scale(.95)}100%{transform:scale(1)}}
 .reveal{opacity:0;transform:translateY(24px);transition:opacity .65s cubic-bezier(.22,1,.36,1),transform .65s cubic-bezier(.22,1,.36,1)}.reveal.visible{opacity:1;transform:translateY(0)}
 
 .brass-hover{position:relative;overflow:hidden}
 .brass-hover::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--brass),var(--brass-d),transparent);opacity:0;transition:opacity .3s;z-index:2}
 .brass-hover:hover::before{opacity:1}
 
+/* NAV */
 nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(6,8,14,.8);backdrop-filter:blur(24px) saturate(1.4);-webkit-backdrop-filter:blur(24px) saturate(1.4);border-bottom:1px solid var(--border)}
 nav .wrap{display:flex;align-items:center;justify-content:space-between;height:56px}
 .nav-brand{display:flex;align-items:center;gap:10px}
@@ -45,6 +47,7 @@ nav .wrap{display:flex;align-items:center;justify-content:space-between;height:5
 .nav-links a{font-family:var(--mono);font-size:.66rem;font-weight:400;letter-spacing:.04em;color:var(--t3);padding:6px 10px;border-radius:6px;border:1px solid transparent;transition:all .25s}
 .nav-links a:hover{color:var(--brass);border-color:var(--border)}
 
+/* HERO */
 .hero{min-height:100vh;display:flex;align-items:center;padding-top:56px;position:relative;overflow:hidden}
 .vault-dial{position:absolute;right:-120px;top:50%;transform:translateY(-50%);width:480px;height:480px;border-radius:50%;border:1px solid rgba(60,65,90,.2);opacity:.18;pointer-events:none}
 .vault-dial::before{content:'';position:absolute;inset:30px;border-radius:50%;border:1px solid rgba(60,65,90,.15)}
@@ -67,17 +70,41 @@ nav .wrap{display:flex;align-items:center;justify-content:space-between;height:5
 .btn-steel{background:var(--surface);color:var(--t2);border:1px solid var(--border);backdrop-filter:blur(8px)}
 .btn-steel:hover{border-color:var(--brass-d);color:var(--brass)}
 
-.section-header{margin-bottom:48px}
-.sec-id{font-family:var(--mono);font-size:.65rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--brass);margin-bottom:10px;display:flex;align-items:center;gap:10px}
-.sec-id::before{content:'';width:20px;height:1px;background:var(--brass)}
+/* SECTION HEADERS - CENTERED */
+.section-header{margin-bottom:48px;text-align:center}
+.sec-id{font-family:var(--mono);font-size:.65rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--brass);margin-bottom:10px;display:flex;align-items:center;justify-content:center;gap:10px}
+.sec-id::before,.sec-id::after{content:'';width:20px;height:1px;background:var(--brass)}
 .sec-title{font-family:var(--display);font-size:clamp(1.6rem,3.2vw,2.2rem);font-weight:400;letter-spacing:-.01em;line-height:1.2;margin-bottom:12px}
-.sec-desc{font-size:.9rem;color:var(--t2);max-width:500px;font-weight:300;line-height:1.8}
+.sec-desc{font-size:.9rem;color:var(--t2);max-width:500px;font-weight:300;line-height:1.8;margin:0 auto}
 .vault-divider{height:1px;background:linear-gradient(90deg,transparent,var(--border) 20%,var(--border) 80%,transparent);position:relative}
 .vault-divider::after{content:'✦';position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);font-size:.5rem;color:var(--brass);background:rgba(6,8,14,.9);padding:0 14px;letter-spacing:4px}
 
+/* LOCK BUTTON - standalone circular */
+.lock-btn{
+  width:48px;height:48px;border-radius:50%;
+  background:var(--panel);border:2px solid var(--border);
+  display:flex;align-items:center;justify-content:center;
+  margin:0 auto 28px;cursor:pointer;transition:all .35s cubic-bezier(.22,1,.36,1);
+  position:relative;
+}
+.lock-btn:hover{border-color:var(--brass);transform:scale(1.08);box-shadow:0 0 20px rgba(212,181,90,.12)}
+.lock-btn.open{border-color:var(--safe);background:rgba(74,222,128,.06);animation:unlockBounce .4s}
+.lock-btn .padlock{width:22px;height:22px;position:relative}
+.lock-btn .padlock .body{width:14px;height:10px;background:var(--brass);border-radius:2px;position:absolute;bottom:0;left:4px}
+.lock-btn .padlock .keyhole{width:3px;height:3px;background:rgba(6,8,14,.5);border-radius:50%;position:absolute;bottom:4px;left:9.5px}
+.lock-btn .padlock .shackle{width:10px;height:9px;border:2.5px solid var(--brass);border-bottom:none;border-radius:5px 5px 0 0;position:absolute;top:1px;left:6px;transition:all .3s cubic-bezier(.22,1,.36,1);transform-origin:right bottom}
+.lock-btn:hover .padlock .shackle{transform:translateY(-2px) rotate(-6deg)}
+.lock-btn.open .padlock .shackle{transform:translateY(-4px) rotate(-20deg);border-color:var(--safe)}
+.lock-btn.open .padlock .body{background:var(--safe)}
+.lock-btn-label{font-family:var(--mono);font-size:.55rem;color:var(--t4);letter-spacing:.06em;text-align:center;margin-bottom:20px;transition:color .3s}
+
+/* Chamber content that unlocks */
+.chamber-locked{max-height:0;overflow:hidden;transition:max-height .6s cubic-bezier(.22,1,.36,1)}
+.chamber-locked.open{max-height:8000px}
+
 /* ABOUT */
 .about-chamber{background:var(--panel);backdrop-filter:blur(20px) saturate(1.2);border:1px solid var(--border);border-radius:12px;overflow:hidden}
-.chamber-header{padding:18px 28px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;background:var(--raised)}
+.chamber-header{padding:18px 28px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:center;gap:10px;background:var(--raised)}
 .chamber-header .lock-icon{width:14px;height:14px;border:1.5px solid var(--brass);border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0}
 .chamber-header .lock-icon::after{content:'';width:4px;height:5px;background:var(--brass);border-radius:1px}
 .chamber-header h3{font-family:var(--mono);font-size:.7rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--t2)}
@@ -90,52 +117,31 @@ nav .wrap{display:flex;align-items:center;justify-content:space-between;height:5
 .stat-card .label{font-family:var(--mono);font-size:.6rem;letter-spacing:.08em;text-transform:uppercase;color:var(--t3);margin-bottom:3px}
 .stat-card .value{font-size:.85rem;font-weight:500;color:var(--t1)}
 
-/* === LOCKABLE CHAMBER === */
-.lockable{background:var(--panel);backdrop-filter:blur(16px);border:1px solid var(--border);border-radius:12px;overflow:hidden;margin-bottom:14px}
-.lock-bar{display:flex;align-items:center;gap:12px;padding:18px 24px;cursor:pointer;transition:background .25s;user-select:none}
-.lock-bar:hover{background:var(--raised)}
-.lock-bar:hover .padlock .shackle{transform:translateY(-3px) rotate(-8deg);opacity:.8}
-.lock-bar:hover .lock-label{color:var(--brass)}
-
-/* Padlock SVG animation */
-.padlock{width:22px;height:22px;position:relative;flex-shrink:0}
-.padlock .body{width:16px;height:12px;background:var(--brass);border-radius:2px;position:absolute;bottom:0;left:3px}
-.padlock .keyhole{width:4px;height:4px;background:rgba(6,8,14,.5);border-radius:50%;position:absolute;bottom:5px;left:9px}
-.padlock .shackle{width:12px;height:10px;border:2.5px solid var(--brass);border-bottom:none;border-radius:6px 6px 0 0;position:absolute;top:0;left:5px;transition:all .3s cubic-bezier(.22,1,.36,1);transform-origin:right bottom}
-
-/* Unlocked state */
-.lockable.unlocked .padlock .shackle{transform:translateY(-4px) rotate(-15deg);opacity:.7}
-.lockable.unlocked .lock-status{color:var(--safe)}
-.lockable.unlocked .lock-bar{border-bottom:1px solid var(--border)}
-
-.lock-label{font-family:var(--mono);font-size:.72rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--t2);transition:color .25s;flex:1}
-.lock-status{font-family:var(--mono);font-size:.58rem;letter-spacing:.06em;color:var(--t4);transition:color .3s}
-.lock-hint{font-family:var(--mono);font-size:.55rem;color:var(--t4);letter-spacing:.04em}
-
-.lock-content{max-height:0;overflow:hidden;transition:max-height .5s cubic-bezier(.22,1,.36,1)}
-.lockable.unlocked .lock-content{max-height:5000px}
-.lock-inner{padding:20px 24px}
-
-/* PROJECTS */
-.proj-drawer{background:var(--panel);backdrop-filter:blur(16px);border:1px solid var(--border);border-radius:10px;margin-bottom:14px;transition:all .35s cubic-bezier(.22,1,.36,1);overflow:hidden;cursor:pointer}
-.proj-drawer:hover{border-color:var(--border-h);transform:translateY(-2px);box-shadow:0 12px 40px rgba(0,0,0,.3)}
-.proj-drawer.featured{border-left:3px solid var(--brass)}
-.drawer-handle{padding:24px 28px;display:flex;justify-content:space-between;align-items:flex-start}
-.drawer-left{flex:1;min-width:0}
-.drawer-label{font-family:var(--mono);font-size:.62rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--brass);margin-bottom:6px}
-.drawer-title{font-family:var(--display);font-size:1.3rem;font-weight:500;letter-spacing:-.01em;margin-bottom:8px;line-height:1.3}
-.drawer-desc{font-size:.85rem;color:var(--t2);font-weight:300;line-height:1.75;margin-bottom:14px;max-width:620px}
-.drawer-tags{display:flex;flex-wrap:wrap;gap:6px}
+/* PROJECT CARDS with individual locks */
+.proj-card{background:var(--panel);backdrop-filter:blur(16px);border:1px solid var(--border);border-radius:10px;margin-bottom:14px;overflow:hidden;transition:all .35s cubic-bezier(.22,1,.36,1)}
+.proj-card:hover{border-color:var(--border-h);box-shadow:0 12px 40px rgba(0,0,0,.3)}
+.proj-card.featured{border-left:3px solid var(--brass)}
+.proj-header{display:flex;align-items:center;padding:16px 24px;gap:14px;cursor:pointer;transition:background .2s}
+.proj-header:hover{background:var(--raised)}
+/* Mini lock for each project */
+.mini-lock{width:28px;height:28px;border-radius:50%;background:var(--surface);border:1.5px solid var(--border);display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .3s}
+.mini-lock svg{width:14px;height:14px;stroke:var(--t4);transition:all .3s}
+.proj-header:hover .mini-lock{border-color:var(--brass)}
+.proj-header:hover .mini-lock svg{stroke:var(--brass)}
+.proj-card.open .mini-lock{background:rgba(74,222,128,.08);border-color:var(--safe)}
+.proj-card.open .mini-lock svg{stroke:var(--safe)}
+.proj-header-text{flex:1;min-width:0}
+.proj-header-title{font-family:var(--display);font-size:1.15rem;font-weight:500;letter-spacing:-.01em;line-height:1.3}
+.proj-header-sub{font-family:var(--mono);font-size:.6rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--brass);margin-bottom:2px}
+.proj-header-year{font-family:var(--mono);font-size:.65rem;color:var(--t4);letter-spacing:.04em;white-space:nowrap;flex-shrink:0}
+.proj-body{max-height:0;overflow:hidden;transition:max-height .45s cubic-bezier(.22,1,.36,1)}
+.proj-card.open .proj-body{max-height:800px}
+.proj-inner{padding:0 24px 24px}
+.proj-inner p{font-size:.85rem;color:var(--t2);font-weight:300;line-height:1.75;margin-bottom:14px;max-width:620px}
+.proj-tags{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px}
 .dtag{font-family:var(--mono);font-size:.62rem;font-weight:400;color:var(--t3);background:var(--surface);border:1px solid var(--border);padding:3px 10px;border-radius:3px;letter-spacing:.02em}
-.drawer-year{font-family:var(--mono);font-size:.68rem;color:var(--t4);letter-spacing:.04em;white-space:nowrap;margin-left:20px;margin-top:4px}
-.drawer-expand{display:flex;align-items:center;gap:4px;font-family:var(--mono);font-size:.6rem;color:var(--t4);margin-top:10px;transition:color .2s}
-.proj-drawer:hover .drawer-expand{color:var(--brass)}
-.drawer-expand svg{width:12px;height:12px;transition:transform .3s}
-.proj-drawer.open .drawer-expand svg{transform:rotate(180deg)}
-.drawer-content{max-height:0;overflow:hidden;transition:max-height .4s cubic-bezier(.22,1,.36,1)}
-.proj-drawer.open .drawer-content{max-height:600px}
-.drawer-images{padding:0 28px 24px;display:flex;gap:12px;flex-wrap:wrap}
-.drawer-images img{border-radius:8px;border:1px solid var(--border);max-height:200px;object-fit:cover}
+.proj-images{display:flex;gap:12px;flex-wrap:wrap}
+.proj-images img{border-radius:8px;border:1px solid var(--border);max-height:180px;object-fit:cover}
 
 /* LEDGER */
 .ledger{display:grid;gap:10px}
@@ -178,40 +184,22 @@ footer{padding:40px 0;border-top:1px solid var(--border)}
 footer .wrap{display:flex;justify-content:space-between;align-items:center}
 footer p{font-family:var(--mono);font-size:.68rem;color:var(--t4)}
 
-@media(max-width:768px){
-.about-grid{grid-template-columns:1fr 1fr}.skills-vault{grid-template-columns:1fr 1fr}
-.ledger-row{grid-template-columns:1fr;gap:6px}.ledger-date{order:-1}.ledger-type{justify-self:start}
-.vault-dial{display:none}section{padding:80px 0}.nav-links{gap:2px}.nav-links a{padding:5px 6px;font-size:.6rem}
-.drawer-images img{max-height:140px}
-}
-@media(max-width:480px){
-.about-grid{grid-template-columns:1fr}.skills-vault{grid-template-columns:1fr}
-.hero-cta{flex-direction:column}.btn{width:100%;justify-content:center}
-.nav-links{display:none}footer .wrap{flex-direction:column;gap:12px;text-align:center}
-.contact-btns{flex-direction:column}.contact-btns .btn{width:100%;justify-content:center}
-}
+@media(max-width:768px){.about-grid{grid-template-columns:1fr 1fr}.skills-vault{grid-template-columns:1fr 1fr}.ledger-row{grid-template-columns:1fr;gap:6px}.ledger-date{order:-1}.ledger-type{justify-self:start}.vault-dial{display:none}section{padding:80px 0}.nav-links{gap:2px}.nav-links a{padding:5px 6px;font-size:.6rem}}
+@media(max-width:480px){.about-grid{grid-template-columns:1fr}.skills-vault{grid-template-columns:1fr}.hero-cta{flex-direction:column}.btn{width:100%;justify-content:center}.nav-links{display:none}footer .wrap{flex-direction:column;gap:12px;text-align:center}.contact-btns{flex-direction:column}.contact-btns .btn{width:100%;justify-content:center}}
 </style>
 </head>
 <body>
-<div class="bg-layer"></div>
-<div class="bg-overlay"></div>
+<div class="bg-layer"></div><div class="bg-overlay"></div>
 
-<nav><div class="wrap">
-<div class="nav-brand"><div class="nav-lock"></div><span>The Vault</span></div>
-<ul class="nav-links">
-<li><a href="#about">About</a></li><li><a href="#projects">Projects</a></li><li><a href="#experience">Experience</a></li>
-<li><a href="#certs">Certs</a></li><li><a href="#community">Community</a></li><li><a href="#skills">Skills</a></li><li><a href="#contact">Contact</a></li>
-</ul></div></nav>
+<nav><div class="wrap"><div class="nav-brand"><div class="nav-lock"></div><span>The Vault</span></div>
+<ul class="nav-links"><li><a href="#about">About</a></li><li><a href="#projects">Projects</a></li><li><a href="#experience">Experience</a></li><li><a href="#certs">Certs</a></li><li><a href="#community">Community</a></li><li><a href="#skills">Skills</a></li><li><a href="#contact">Contact</a></li></ul></div></nav>
 
 <!-- HERO -->
 <section class="hero"><div class="vault-dial"></div><div class="wrap"><div class="hero-content">
 <div class="hero-status"><span class="dot"></span>Birmingham, UK · Dubai, UAE</div>
 <h1>Krishnasree <span class="accent">Kelath</span></h1>
 <p class="hero-tagline">Exploring where <strong>music</strong>, <strong>cognition</strong>, and <strong>machine learning</strong> meet. Building interpretable systems that listen the way humans do.</p>
-<div class="hero-pills">
-<span class="pill">Interpretable ML</span><span class="pill">Carnatic music & cognition</span>
-<span class="pill">Game development</span><span class="pill">Cognitively-informed AI</span>
-</div>
+<div class="hero-pills"><span class="pill">Interpretable ML</span><span class="pill">Carnatic music & cognition</span><span class="pill">Game development</span><span class="pill">Cognitively-informed AI</span></div>
 <div class="hero-cta">
 <a href="https://github.com/krsnkkv" target="_blank" class="btn btn-brass"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>GitHub</a>
 <a href="https://www.linkedin.com/in/krishnasree-kelath/" target="_blank" class="btn btn-steel"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>LinkedIn</a>
@@ -236,81 +224,41 @@ footer p{font-family:var(--mono);font-size:.68rem;color:var(--t4)}
 <div class="stat-card"><div class="label">Graduating</div><div class="value">Jul 2026</div></div>
 <div class="stat-card"><div class="label">Focus</div><div class="value">Music × Cognition × ML</div></div>
 <div class="stat-card"><div class="label">Based in</div><div class="value">Birmingham / Dubai</div></div>
-</div></div></div>
-</div></section>
+</div></div></div></div></section>
 
 <div class="vault-divider"></div>
 
-<!-- PROJECTS -->
+<!-- PROJECTS with individual locks -->
 <section id="projects"><div class="wrap">
 <div class="section-header reveal"><div class="sec-id">Chamber 02 / Projects</div><div class="sec-title">Classified works</div><p class="sec-desc">Research, apps, workshops, and satellites.</p></div>
 
-<div class="proj-drawer featured brass-hover reveal" onclick="this.classList.toggle('open')">
-<div class="drawer-handle"><div class="drawer-left">
-<div class="drawer-label">Dissertation / Featured</div>
-<div class="drawer-title">How Do We Hear a Rāga?</div>
-<p class="drawer-desc">An interpretable cognitive model of melodic recognition. Six-stage ML pipeline for Carnatic rāga classification using pitch contour extraction (torchcrepe), tonic normalisation, swara mapping, transition-based feature extraction, and SVM/LSTM classifiers with GroupKFold cross-validation.</p>
-<div class="drawer-tags"><span class="dtag">PyTorch</span><span class="dtag">scikit-learn</span><span class="dtag">librosa</span><span class="dtag">torchcrepe</span><span class="dtag">Interpretable ML</span><span class="dtag">Carnatic music</span></div>
-</div><span class="drawer-year">2025/2026</span></div></div>
+<div class="proj-card featured reveal"><div class="proj-header" onclick="this.parentElement.classList.toggle('open')"><div class="mini-lock"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div><div class="proj-header-text"><div class="proj-header-sub">Dissertation / Featured</div><div class="proj-header-title">How Do We Hear a Rāga?</div></div><span class="proj-header-year">2025/2026</span></div>
+<div class="proj-body"><div class="proj-inner"><p>An interpretable cognitive model of melodic recognition. Six-stage ML pipeline for Carnatic rāga classification using pitch contour extraction (torchcrepe), tonic normalisation, swara mapping, transition-based feature extraction, and SVM/LSTM classifiers with GroupKFold cross-validation.</p><div class="proj-tags"><span class="dtag">PyTorch</span><span class="dtag">scikit-learn</span><span class="dtag">librosa</span><span class="dtag">torchcrepe</span><span class="dtag">Interpretable ML</span><span class="dtag">Carnatic music</span></div></div></div></div>
 
-<div class="proj-drawer brass-hover reveal" onclick="this.classList.toggle('open')">
-<div class="drawer-handle"><div class="drawer-left">
-<div class="drawer-label">Co-founder</div><div class="drawer-title">Rahla</div>
-<p class="drawer-desc">AI-powered AR travel app that lets tourists explore Dubai through games and challenges. Co-founded and pitched at the App Olympics 2024/25 by Dubai Chambers, reaching the semi-finals.</p>
-<div class="drawer-tags"><span class="dtag">AR</span><span class="dtag">AI</span><span class="dtag">App Olympics semi-finalist</span><span class="dtag">Dubai Chambers</span></div>
-<div class="drawer-expand"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg> View images</div>
-</div><span class="drawer-year">2024/2025</span></div>
-<div class="drawer-content"><div class="drawer-images">
-<img src="rahla-cert.png" alt="App Olympics Certificate of Achievement">
-<img src="rahla-ceremony.png" alt="Create Apps Championship Award Ceremony">
-</div></div></div>
+<div class="proj-card reveal"><div class="proj-header" onclick="this.parentElement.classList.toggle('open')"><div class="mini-lock"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div><div class="proj-header-text"><div class="proj-header-sub">Co-founder</div><div class="proj-header-title">Rahla</div></div><span class="proj-header-year">2024/2025</span></div>
+<div class="proj-body"><div class="proj-inner"><p>AI-powered AR travel app that lets tourists explore Dubai through games and challenges. Co-founded and pitched at the App Olympics 2024/25 by Dubai Chambers, reaching the semi-finals.</p><div class="proj-tags"><span class="dtag">AR</span><span class="dtag">AI</span><span class="dtag">App Olympics semi-finalist</span><span class="dtag">Dubai Chambers</span></div><div class="proj-images"><img src="rahla-cert.png" alt="App Olympics Certificate"><img src="rahla-ceremony.png" alt="Award Ceremony"></div></div></div></div>
 
-<div class="proj-drawer brass-hover reveal" onclick="this.classList.toggle('open')">
-<div class="drawer-handle"><div class="drawer-left">
-<div class="drawer-label">Workshop / Public Talk</div><div class="drawer-title">Can AI Dream?</div>
-<p class="drawer-desc">Public workshop, "Searching for Soul in AI and Creativity", delivered through the UAE AI Summer Camp 7.0 (Coders HQ / National Program for Coders). Explored the line between machine intelligence and human creativity.</p>
-<div class="drawer-tags"><span class="dtag">Public speaking</span><span class="dtag">AI outreach</span><span class="dtag">UAE AI Camp 7.0</span><span class="dtag">Coders HQ</span></div>
-<div class="drawer-expand"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg> View images</div>
-</div><span class="drawer-year">Aug 2025</span></div>
-<div class="drawer-content"><div class="drawer-images">
-<img src="canaidream-poster.png" alt="Can AI Dream workshop poster">
-<img src="aicamp-cert.png" alt="UAE AI Summer Camp Certificate">
-</div></div></div>
+<div class="proj-card reveal"><div class="proj-header" onclick="this.parentElement.classList.toggle('open')"><div class="mini-lock"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div><div class="proj-header-text"><div class="proj-header-sub">Workshop / Public Talk</div><div class="proj-header-title">Can AI Dream?</div></div><span class="proj-header-year">Aug 2025</span></div>
+<div class="proj-body"><div class="proj-inner"><p>Public workshop, "Searching for Soul in AI and Creativity", delivered through the UAE AI Summer Camp 7.0 (Coders HQ / National Program for Coders). Explored the line between machine intelligence and human creativity.</p><div class="proj-tags"><span class="dtag">Public speaking</span><span class="dtag">AI outreach</span><span class="dtag">UAE AI Camp 7.0</span><span class="dtag">Coders HQ</span></div><div class="proj-images"><img src="canaidream-poster.png" alt="Can AI Dream poster"><img src="aicamp-cert.png" alt="AI Camp Certificate"></div></div></div></div>
 
-<div class="proj-drawer brass-hover reveal">
-<div class="drawer-handle"><div class="drawer-left">
-<div class="drawer-label">Competition / Project Management Lead</div><div class="drawer-title">Team Astraeus / UKSEDS Satellite Design</div>
-<p class="drawer-desc">Project Management Lead and Software Team member for the UKSEDS Satellite Design Competition 2024. Led document submissions and contributed to onboard computer design for a CubeSat prototype.</p>
-<div class="drawer-tags"><span class="dtag">CubeSat</span><span class="dtag">Project management</span><span class="dtag">Space systems</span><span class="dtag">UKSEDS</span></div>
-</div><span class="drawer-year">2024</span></div></div>
+<div class="proj-card reveal"><div class="proj-header" onclick="this.parentElement.classList.toggle('open')"><div class="mini-lock"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div><div class="proj-header-text"><div class="proj-header-sub">Competition / Project Management Lead</div><div class="proj-header-title">Team Astraeus / UKSEDS Satellite Design</div></div><span class="proj-header-year">2024</span></div>
+<div class="proj-body"><div class="proj-inner"><p>Project Management Lead and Software Team member for the UKSEDS Satellite Design Competition 2024. Led document submissions and contributed to onboard computer design for a CubeSat prototype.</p><div class="proj-tags"><span class="dtag">CubeSat</span><span class="dtag">Project management</span><span class="dtag">Space systems</span><span class="dtag">UKSEDS</span></div></div></div></div>
 
-<div class="proj-drawer brass-hover reveal">
-<div class="drawer-handle"><div class="drawer-left">
-<div class="drawer-label">University Coursework</div><div class="drawer-title">RePackaged</div>
-<p class="drawer-desc">A local marketplace app where users buy or sell items in surprise gift boxes. Collaborative prototyping, use cases, and staged development planning.</p>
-<div class="drawer-tags"><span class="dtag">Product design</span><span class="dtag">Prototyping</span><span class="dtag">Team project</span></div>
-</div><span class="drawer-year">2023</span></div></div>
+<div class="proj-card reveal"><div class="proj-header" onclick="this.parentElement.classList.toggle('open')"><div class="mini-lock"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div><div class="proj-header-text"><div class="proj-header-sub">University Coursework</div><div class="proj-header-title">RePackaged</div></div><span class="proj-header-year">2023</span></div>
+<div class="proj-body"><div class="proj-inner"><p>A local marketplace app where users buy or sell items in surprise gift boxes. Collaborative prototyping, use cases, and staged development planning.</p><div class="proj-tags"><span class="dtag">Product design</span><span class="dtag">Prototyping</span><span class="dtag">Team project</span></div></div></div></div>
 
-<div class="proj-drawer brass-hover reveal">
-<div class="drawer-handle"><div class="drawer-left">
-<div class="drawer-label">Solo Projects</div><div class="drawer-title">Game Development with Unity</div>
-<p class="drawer-desc">Solo 2D and 3D game development in Unity. Foundational study through UnityLearn and Blender. Previously built Flappy Bird, 2048 clones and more.</p>
-<div class="drawer-tags"><span class="dtag">Unity</span><span class="dtag">Blender</span><span class="dtag">Game dev</span></div>
-</div></div></div>
+<div class="proj-card reveal"><div class="proj-header" onclick="this.parentElement.classList.toggle('open')"><div class="mini-lock"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div><div class="proj-header-text"><div class="proj-header-sub">Solo Projects</div><div class="proj-header-title">Game Development with Unity</div></div></div>
+<div class="proj-body"><div class="proj-inner"><p>Solo 2D and 3D game development in Unity. Foundational study through UnityLearn and Blender. Previously built Flappy Bird, 2048 clones and more.</p><div class="proj-tags"><span class="dtag">Unity</span><span class="dtag">Blender</span><span class="dtag">Game dev</span></div></div></div></div>
 </div></section>
 
 <div class="vault-divider"></div>
 
-<!-- EXPERIENCE (Chamber 03) — LOCKABLE -->
+<!-- EXPERIENCE (Chamber 03) -->
 <section id="experience"><div class="wrap">
 <div class="section-header reveal"><div class="sec-id">Chamber 03 / Experience</div><div class="sec-title">Professional work</div></div>
-<div class="lockable reveal" onclick="this.classList.toggle('unlocked')">
-<div class="lock-bar">
-<div class="padlock"><div class="shackle"></div><div class="body"></div><div class="keyhole"></div></div>
-<span class="lock-label">Professional Experience</span>
-<span class="lock-status">Click to unlock</span>
-</div>
-<div class="lock-content"><div class="lock-inner">
+<div class="lock-btn reveal" onclick="this.classList.toggle('open');this.nextElementSibling.nextElementSibling.classList.toggle('open')"><div class="padlock"><div class="shackle"></div><div class="body"></div><div class="keyhole"></div></div></div>
+<div class="lock-btn-label">Click the lock to reveal</div>
+<div class="chamber-locked">
 <div class="ledger">
 <div class="ledger-row brass-hover"><div class="ledger-date">Apr/Oct 2025</div><div class="ledger-info"><h4>Creative & Operations Lead</h4><div class="org">Nova Studio</div><p class="desc">Designed 2D sprites and 3D game assets for two in-development titles. Led visual content, studio marketing, social media, pitch development, and internal coordination.</p></div><span class="ledger-type type-work">Work</span></div>
 <div class="ledger-row brass-hover"><div class="ledger-date">Mar/Oct 2025</div><div class="ledger-info"><h4>Marketing Manager</h4><div class="org">Nova Studio</div><p class="desc">Built brand identity from the ground up. Crafted marketing plans for indie game audiences, managed social media channels, and wrote copy for investor presentations.</p></div><span class="ledger-type type-marketing">Marketing</span></div>
@@ -318,22 +266,17 @@ footer p{font-family:var(--mono);font-size:.68rem;color:var(--t4)}
 <div class="ledger-row brass-hover"><div class="ledger-date">Oct 2025/Jan 2026</div><div class="ledger-info"><h4>Resident Ambassador</h4><div class="org">Unite Students · Birmingham, UK</div><p class="desc">Organised and hosted community events to improve resident engagement. Led social initiatives (movie nights, creative workshops, game events). Promoted an inclusive residential environment and supported student wellbeing.</p></div><span class="ledger-type type-work">Work</span></div>
 <div class="ledger-row brass-hover"><div class="ledger-date">2024</div><div class="ledger-info"><h4>Digital Intern</h4><div class="org">Space Avenue Interior Design</div><p class="desc">Web development, .ae domain configuration, professional email setup, and IT solutions to establish the firm's online presence.</p></div><span class="ledger-type type-work">Work</span></div>
 <div class="ledger-row brass-hover"><div class="ledger-date">Jul/Aug 2021</div><div class="ledger-info"><h4>Project Management Trainee</h4><div class="org">Electrofos Designs LLC · Dubai</div><p class="desc">Participated in a team project on product development and management. Observed stages from market research to testing and launch.</p></div><span class="ledger-type type-work">Work</span></div>
-<div class="ledger-row brass-hover"><div class="ledger-date">Jun/Jul 2020</div><div class="ledger-info"><h4>Student Research Assistant</h4><div class="org">Manipal Academy of Higher Education (MAHE), Dubai</div><p class="desc">Contributed to a research project on Product Development: Synthesis of Bio-Sanitizers. Wrote a review on COVID-19 and hand sanitizer effects.</p></div><span class="ledger-type type-work">Work</span></div>
-</div></div></div></div>
-</div></section>
+<div class="ledger-row brass-hover"><div class="ledger-date">Jun/Jul 2020</div><div class="ledger-info"><h4>Student Research Assistant</h4><div class="org">Manipal Academy of Higher Education (MAHE), Dubai</div><p class="desc">Contributed to a research project on Product Development: Synthesis of Bio-Sanitizers.</p></div><span class="ledger-type type-work">Work</span></div>
+</div></div></div></section>
 
 <div class="vault-divider"></div>
 
-<!-- CERTIFICATIONS & AWARDS (Chamber 04) — LOCKABLE -->
+<!-- CERTS (Chamber 04) -->
 <section id="certs"><div class="wrap">
 <div class="section-header reveal"><div class="sec-id">Chamber 04 / Credentials</div><div class="sec-title">Certifications & awards</div></div>
-<div class="lockable reveal" onclick="this.classList.toggle('unlocked')">
-<div class="lock-bar">
-<div class="padlock"><div class="shackle"></div><div class="body"></div><div class="keyhole"></div></div>
-<span class="lock-label">Certifications & Awards</span>
-<span class="lock-status">Click to unlock</span>
-</div>
-<div class="lock-content"><div class="lock-inner">
+<div class="lock-btn reveal" onclick="this.classList.toggle('open');this.nextElementSibling.nextElementSibling.classList.toggle('open')"><div class="padlock"><div class="shackle"></div><div class="body"></div><div class="keyhole"></div></div></div>
+<div class="lock-btn-label">Click the lock to reveal</div>
+<div class="chamber-locked">
 <div class="ledger">
 <div class="ledger-row brass-hover"><div class="ledger-date">2025</div><div class="ledger-info"><h4>Birmingham Award with Distinction</h4><div class="org">University of Birmingham</div></div><span class="ledger-type type-award">Award</span></div>
 <div class="ledger-row brass-hover"><div class="ledger-date">2024</div><div class="ledger-info"><h4>Birmingham Dubai Award</h4><div class="org">University of Birmingham Dubai</div></div><span class="ledger-type type-award">Award</span></div>
@@ -348,21 +291,16 @@ footer p{font-family:var(--mono);font-size:.68rem;color:var(--t4)}
 <div class="ledger-row brass-hover"><div class="ledger-date">Jul 2024</div><div class="ledger-info"><h4>Generative AI Concepts</h4><div class="org">DataCamp</div></div><span class="ledger-type type-cert">Cert</span></div>
 <div class="ledger-row brass-hover"><div class="ledger-date">Dec 2023</div><div class="ledger-info"><h4>Cybersecurity Job Simulation</h4><div class="org">Mastercard / Forage</div></div><span class="ledger-type type-cert">Cert</span></div>
 <div class="ledger-row brass-hover"><div class="ledger-info"><h4>Distinction: Graded Examinations in Music Performance</h4><div class="org">Trinity College London</div></div><span class="ledger-type type-cert">Cert</span></div>
-</div></div></div></div>
-</div></section>
+</div></div></div></section>
 
 <div class="vault-divider"></div>
 
-<!-- COMMUNITY & LEADERSHIP (Chamber 05) — LOCKABLE -->
+<!-- COMMUNITY (Chamber 05) -->
 <section id="community"><div class="wrap">
 <div class="section-header reveal"><div class="sec-id">Chamber 05 / Community & Leadership</div><div class="sec-title">Volunteering & outreach</div></div>
-<div class="lockable reveal" onclick="this.classList.toggle('unlocked')">
-<div class="lock-bar">
-<div class="padlock"><div class="shackle"></div><div class="body"></div><div class="keyhole"></div></div>
-<span class="lock-label">Community & Leadership</span>
-<span class="lock-status">Click to unlock</span>
-</div>
-<div class="lock-content"><div class="lock-inner">
+<div class="lock-btn reveal" onclick="this.classList.toggle('open');this.nextElementSibling.nextElementSibling.classList.toggle('open')"><div class="padlock"><div class="shackle"></div><div class="body"></div><div class="keyhole"></div></div></div>
+<div class="lock-btn-label">Click the lock to reveal</div>
+<div class="chamber-locked">
 <div class="ledger">
 <div class="ledger-row brass-hover"><div class="ledger-date">Nov 2024</div><div class="ledger-info"><h4>Speaker / Digital Literacy Workshop</h4><div class="org">Millennium Campus Network (MCN)</div><p class="desc">Volunteered as a speaker. Educated university janitors on Google Accounts, Google Meet, phishing attacks, social media safety, and digital footprint.</p></div><span class="ledger-type type-vol">Volunteering</span></div>
 <div class="ledger-row brass-hover"><div class="ledger-date">2024</div><div class="ledger-info"><h4>Marketing Team Member</h4><div class="org">AIESEC UAE</div><p class="desc">Event outreach and branding for the global youth-run leadership organisation.</p></div><span class="ledger-type type-vol">Volunteering</span></div>
@@ -370,21 +308,16 @@ footer p{font-family:var(--mono);font-size:.68rem;color:var(--t4)}
 <div class="ledger-row brass-hover"><div class="ledger-date">2023/2024</div><div class="ledger-info"><h4>Social Media Manager</h4><div class="org">UoBD Space Society</div><p class="desc">Promoted events and initiatives for the university space exploration society.</p></div><span class="ledger-type type-marketing">Marketing</span></div>
 <div class="ledger-row brass-hover"><div class="ledger-date">Mar 2024</div><div class="ledger-info"><h4>Organisation Team</h4><div class="org">TEDxUniversityOfBirminghamDubai</div><p class="desc">Part of the organisation team for the very first TEDx event held at UoB Dubai.</p></div><span class="ledger-type type-vol">Volunteering</span></div>
 <div class="ledger-row brass-hover"><div class="ledger-date">2023</div><div class="ledger-info"><h4>Iftar Meals Distribution</h4><div class="org">Rotaract</div><p class="desc">Provided food and water for blue-collared workers during Ramadan.</p></div><span class="ledger-type type-vol">Volunteering</span></div>
-</div></div></div></div>
-</div></section>
+</div></div></div></section>
 
 <div class="vault-divider"></div>
 
-<!-- SKILLS (Chamber 06) — LOCKABLE -->
+<!-- SKILLS (Chamber 06) -->
 <section id="skills"><div class="wrap">
 <div class="section-header reveal"><div class="sec-id">Chamber 06 / Arsenal</div><div class="sec-title">Skills & tools</div></div>
-<div class="lockable unlocked reveal">
-<div class="lock-bar" onclick="this.parentElement.classList.toggle('unlocked')">
-<div class="padlock"><div class="shackle"></div><div class="body"></div><div class="keyhole"></div></div>
-<span class="lock-label">Skills & Modules</span>
-<span class="lock-status">Click to lock</span>
-</div>
-<div class="lock-content"><div class="lock-inner">
+<div class="lock-btn open reveal" onclick="this.classList.toggle('open');this.nextElementSibling.nextElementSibling.classList.toggle('open')"><div class="padlock"><div class="shackle"></div><div class="body"></div><div class="keyhole"></div></div></div>
+<div class="lock-btn-label">Skills unlocked</div>
+<div class="chamber-locked open">
 <div class="skills-vault">
 <div class="skill-cell"><h4>ML & Data</h4><ul><li>PyTorch</li><li>scikit-learn</li><li>librosa / torchcrepe</li><li>SVM, LSTM, CNN</li><li>Signal processing</li></ul></div>
 <div class="skill-cell"><h4>Languages</h4><ul><li>Python</li><li>Java</li><li>C / C#</li><li>JavaScript / HTML / CSS</li><li>LaTeX</li></ul></div>
@@ -395,14 +328,13 @@ footer p{font-family:var(--mono);font-size:.68rem;color:var(--t4)}
 <div class="skill-cell"><h4>Modules (Intermediate)</h4><ul><li>Artificial Intelligence 2</li><li>Operating Systems and Systems Programming</li></ul></div>
 <div class="skill-cell"><h4>Modules (Core)</h4><ul><li>Mathematical and Logical Foundations of CS</li><li>Data Structures and Algorithms</li></ul></div>
 <div class="skill-cell"><h4>Other</h4><ul><li>Creative direction</li><li>Workshop facilitation</li><li>Social media & marketing</li><li>Project management</li><li>Technical writing</li></ul></div>
-</div></div></div></div>
-</div></section>
+</div></div></div></section>
 
 <div class="vault-divider"></div>
 
 <!-- CONTACT (Chamber 07) -->
 <section id="contact"><div class="wrap">
-<div class="section-header reveal" style="text-align:center"><div class="sec-id" style="justify-content:center">Chamber 07 / Comms</div></div>
+<div class="section-header reveal"><div class="sec-id">Chamber 07 / Comms</div></div>
 <div class="contact-terminal brass-hover reveal">
 <div class="terminal-bar"><div class="terminal-dot" style="background:var(--danger)"></div><div class="terminal-dot" style="background:var(--brass)"></div><div class="terminal-dot" style="background:var(--safe)"></div><span>secure_channel.sh</span></div>
 <div class="terminal-body">
@@ -412,32 +344,16 @@ footer p{font-family:var(--mono);font-size:.68rem;color:var(--t4)}
 <a href="mailto:krishnasreevinod@gmail.com" class="btn btn-brass"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>Email me</a>
 <a href="https://github.com/krsnkkv" target="_blank" class="btn btn-steel">GitHub</a>
 <a href="https://www.linkedin.com/in/krishnasree-kelath/" target="_blank" class="btn btn-steel">LinkedIn</a>
-</div></div></div>
-</div></section>
+</div></div></div></div></section>
 
 <footer><div class="wrap"><p>© 2026 Krishnasree Kelath</p><p>The Vault. Built with care, not a template.</p></div></footer>
 
 <script>
-// Scroll reveal
 const obs=new IntersectionObserver(e=>{e.forEach(el=>{if(el.isIntersecting){el.target.classList.add('visible');obs.unobserve(el.target)}})},{threshold:.08,rootMargin:'0px 0px -30px 0px'});
 document.querySelectorAll('.reveal').forEach((el,i)=>{el.style.transitionDelay=`${Math.min(i*.04,.3)}s`;obs.observe(el)});
-
-// Nav shadow
 const nav=document.querySelector('nav');
 window.addEventListener('scroll',()=>{nav.style.boxShadow=window.scrollY>20?'0 4px 30px rgba(0,0,0,.5)':'none'});
-
-// Smooth anchor scrolling
 document.querySelectorAll('a[href^="#"]').forEach(a=>{a.addEventListener('click',e=>{e.preventDefault();document.querySelector(a.getAttribute('href'))?.scrollIntoView({behavior:'smooth'})})});
-
-// Update lock status text dynamically
-document.querySelectorAll('.lockable').forEach(lock=>{
-  const statusEl=lock.querySelector('.lock-status');
-  if(!statusEl)return;
-  const observer=new MutationObserver(()=>{
-    statusEl.textContent=lock.classList.contains('unlocked')?'Unlocked':'Click to unlock';
-  });
-  observer.observe(lock,{attributes:true,attributeFilter:['class']});
-});
 </script>
 </body>
 </html>
